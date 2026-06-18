@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nitin Kumar | Solutions Architect @ AWS</title>
+
+    <!-- Open Graph for link previews (Slack, Teams, WhatsApp) -->
+    <meta property="og:title" content="Nitin Kumar | Solutions Architect @ AWS">
+    <meta property="og:description" content="Helping enterprises build & scale Data AI ecosystem | Streaming & Data AI Specialist">
+    <meta property="og:image" content="9E907A45-5ACD-43B7-BA21-955BBAD2AB6E.jpg">
+    <meta property="og:type" content="profile">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Nitin Kumar | Solutions Architect @ AWS">
+    <meta name="twitter:description" content="Helping enterprises build & scale Data AI ecosystem | Streaming & Data AI Specialist">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #0b1a2f;
+            font-family: 'Inter', sans-serif;
+            padding: 20px;
+            gap: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* AI Neural Network Background */
+        #ai-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .card-container,
+        .flip-btn {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Flip card */
+        .card-container {
+            width: 100%;
+            max-width: 420px;
+            height: 560px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s ease;
+            transform-style: preserve-3d;
+        }
+
+        .card-container.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front,
+        .card-back {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            backface-visibility: hidden;
+        }
+
+        /* Front */
+        .card-front {
+            background: #162742;
+            border: 1px solid #1e3a5f;
+            padding: 40px 28px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Back */
+        .card-back {
+            background: #162742;
+            border: 1px solid #1e3a5f;
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 28px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .card-back .qr-label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #8899aa;
+            margin-bottom: 24px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .card-back .qr-wrapper {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 22px;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-back .qr-wrapper img {
+            width: 200px;
+            height: 200px;
+            display: block;
+        }
+
+        .card-back .qr-hint {
+            margin-top: 22px;
+            font-size: 0.76rem;
+            color: #5a6d7f;
+        }
+
+        /* Flip button */
+        .flip-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: #1a3050;
+            border: 1px solid #2a4a6a;
+            border-radius: 10px;
+            color: #8899aa;
+            font-size: 0.8rem;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .flip-btn:hover {
+            background: #1e3a5f;
+            color: #ffffff;
+            border-color: #3a6a9a;
+        }
+
+        .flip-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: transform 0.3s ease;
+        }
+
+        .flip-btn:hover svg {
+            transform: rotate(180deg);
+        }
+
+        /* Front content */
+        .card-content {
+            width: 100%;
+        }
+
+        .photo-wrapper {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 24px;
+            border-radius: 50%;
+            padding: 3px;
+            background: linear-gradient(135deg, #FF9900, #ffb84d);
+            box-shadow: 0 6px 20px rgba(255, 153, 0, 0.25);
+        }
+
+        .photo-wrapper img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #162742;
+        }
+
+        .name {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 6px;
+            letter-spacing: -0.02em;
+        }
+
+        .designation {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #FF9900;
+            margin-bottom: 12px;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 0.02em;
+        }
+
+        .designation::before {
+            content: '// ';
+            color: #5a6d7f;
+        }
+
+        .company {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: #FF9900;
+            background: #1a3050;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid #2a4a6a;
+            margin-bottom: 24px;
+        }
+
+        .company .aws-logo-img {
+            height: 18px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .divider {
+            width: 40px;
+            height: 2px;
+            background: #FF9900;
+            margin: 0 auto 20px;
+            border-radius: 1px;
+        }
+
+        .intro {
+            font-size: 0.85rem;
+            line-height: 1.7;
+            color: #6b7f92;
+            margin-bottom: 28px;
+            max-width: 320px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .linkedin-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 22px;
+            background: #0077b5;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px rgba(0, 119, 181, 0.3);
+        }
+
+        .linkedin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 119, 181, 0.4);
+            background: #0088cc;
+        }
+
+        .linkedin-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        .github-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 22px;
+            background: #24292e;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+        }
+
+        .github-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+            background: #333a40;
+        }
+
+        .github-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        /* Mobile */
+        @media (max-width: 480px) {
+            .card-container {
+                height: 520px;
+            }
+
+            .card-front {
+                padding: 32px 20px;
+            }
+
+            .name {
+                font-size: 1.4rem;
+            }
+
+            .photo-wrapper {
+                width: 100px;
+                height: 100px;
+            }
+
+            .card-back .qr-wrapper img {
+                width: 170px;
+                height: 170px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="ai-bg"></canvas>
+
+    <div class="card-container" id="cardContainer">
+        <div class="card-inner">
+            <!-- FRONT -->
+            <div class="card-front" role="article" aria-label="Business card of Nitin Kumar">
+                <div class="card-content">
+                    <div class="photo-wrapper">
+                        <img src="9E907A45-5ACD-43B7-BA21-955BBAD2AB6E.jpg" alt="Nitin Kumar" />
+                    </div>
+                    <h1 class="name">Nitin Kumar</h1>
+                    <p class="designation">Solutions Architect</p>
+                    <span class="company">
+                        <img src="aws.webp" alt="AWS" class="aws-logo-img" />
+                        Amazon Web Services
+                    </span>
+                    <div class="divider"></div>
+                    <p class="intro">
+                        Helping enterprises build &amp; scale Data AI ecosystem | Streaming &amp; Data AI Specialist
+                    </p>
+                    <div class="social-links">
+                        <a href="https://www.linkedin.com/in/nitinkr91/" class="linkedin-btn" target="_blank" rel="noopener noreferrer" aria-label="Connect on LinkedIn">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                            </svg>
+                            LinkedIn
+                        </a>
+                        <a href="https://github.com/ni-ti-n" class="github-btn" target="_blank" rel="noopener noreferrer" aria-label="View GitHub">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                            </svg>
+                            GitHub
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BACK -->
+            <div class="card-back" aria-label="QR Code to connect">
+                <p class="qr-label">Scan to Connect</p>
+                <div class="qr-wrapper">
+                    <img src="QRCode.png" alt="QR Code - Scan to connect with Nitin Kumar" />
+                </div>
+                <p class="qr-hint">Point your camera to scan</p>
+            </div>
+        </div>
+    </div>
+
+    <button class="flip-btn" id="flipBtn" aria-label="Flip card">
+        <svg viewBox="0 0 24 24">
+            <polyline points="1 4 1 10 7 10"/>
+            <polyline points="23 20 23 14 17 14"/>
+            <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
+        </svg>
+        Flip Card
+    </button>
+
+    <script>
+        // AI Neural Network Animation
+        const canvas = document.getElementById('ai-bg');
+        const ctx = canvas.getContext('2d');
+        let nodes = [];
+        let animationId;
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initNodes();
+        }
+
+        function initNodes() {
+            nodes = [];
+            const count = Math.floor((canvas.width * canvas.height) / 18000);
+            for (let i = 0; i < count; i++) {
+                nodes.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 0.4,
+                    vy: (Math.random() - 0.5) * 0.4,
+                    radius: Math.random() * 1.5 + 0.5,
+                    pulse: Math.random() * Math.PI * 2
+                });
+            }
+        }
+
+        function drawNetwork() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const connectionDist = 140;
+
+            // Update & draw nodes
+            for (let i = 0; i < nodes.length; i++) {
+                const node = nodes[i];
+                node.x += node.vx;
+                node.y += node.vy;
+                node.pulse += 0.02;
+
+                // Wrap around edges
+                if (node.x < 0) node.x = canvas.width;
+                if (node.x > canvas.width) node.x = 0;
+                if (node.y < 0) node.y = canvas.height;
+                if (node.y > canvas.height) node.y = 0;
+
+                // Draw node with pulse
+                const alpha = 0.3 + Math.sin(node.pulse) * 0.15;
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 153, 0, ${alpha})`;
+                ctx.fill();
+
+                // Draw connections
+                for (let j = i + 1; j < nodes.length; j++) {
+                    const other = nodes[j];
+                    const dx = node.x - other.x;
+                    const dy = node.y - other.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < connectionDist) {
+                        const lineAlpha = (1 - dist / connectionDist) * 0.12;
+                        ctx.beginPath();
+                        ctx.moveTo(node.x, node.y);
+                        ctx.lineTo(other.x, other.y);
+                        ctx.strokeStyle = `rgba(255, 153, 0, ${lineAlpha})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            animationId = requestAnimationFrame(drawNetwork);
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+        drawNetwork();
+
+        // Card flip logic
+        const container = document.getElementById('cardContainer');
+        const btn = document.getElementById('flipBtn');
+
+        function flip(e) {
+            if (e.target.closest('.linkedin-btn') || e.target.closest('.github-btn')) return;
+            container.classList.toggle('flipped');
+        }
+
+        btn.addEventListener('click', flip);
+        container.addEventListener('click', flip);
+    </script>
+</body>
+</html>
