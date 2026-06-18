@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog | Nitin Kumar - AWS Big Data</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #0b1a2f;
+            font-family: 'Inter', sans-serif;
+            color: #c8d6e5;
+            overflow-x: hidden;
+        }
+
+        /* Animated data stream background */
+        .bg-streams {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .stream-line {
+            position: absolute;
+            width: 1px;
+            height: 80px;
+            background: linear-gradient(180deg, transparent, #FF9900, transparent);
+            opacity: 0.15;
+            animation: stream-fall linear infinite;
+        }
+
+        @keyframes stream-fall {
+            0% { transform: translateY(-100px); }
+            100% { transform: translateY(calc(100vh + 100px)); }
+        }
+
+        /* Header */
+        .header {
+            position: relative;
+            z-index: 1;
+            padding: 60px 20px 40px;
+            text-align: center;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #5a7a9a;
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 500;
+            margin-bottom: 24px;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: #FF9900;
+        }
+
+        .back-link svg {
+            width: 16px;
+            height: 16px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #162742;
+            border: 1px solid #2a4a6a;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #FF9900;
+            margin-bottom: 20px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .header-badge .pulse {
+            width: 8px;
+            height: 8px;
+            background: #FF9900;
+            border-radius: 50%;
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255, 153, 0, 0.4); }
+            50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(255, 153, 0, 0); }
+        }
+
+        .header h1 {
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 12px;
+            letter-spacing: -0.03em;
+            line-height: 1.2;
+        }
+
+        .header h1 span {
+            background: linear-gradient(135deg, #FF9900, #ffb84d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 1rem;
+            color: #6b7f92;
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .blog-stats {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-top: 28px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-num {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #FF9900;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: #5a6d7f;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-top: 2px;
+        }
+
+        /* Blog grid */
+        .blog-grid {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px 20px 80px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Blog card */
+        .blog-card {
+            background: #162742;
+            border: 1px solid #1e3a5f;
+            border-radius: 16px;
+            padding: 28px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .blog-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(180deg, #FF9900, #ffb84d);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .blog-card:hover {
+            transform: translateX(4px);
+            border-color: #FF9900;
+            box-shadow: 0 8px 30px rgba(255, 153, 0, 0.08);
+        }
+
+        .blog-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #1e3a5f;
+            font-family: 'JetBrains Mono', monospace;
+            min-width: 50px;
+            text-align: center;
+            transition: color 0.3s;
+        }
+
+        .blog-card:hover .card-number {
+            color: #FF9900;
+        }
+
+        .card-body h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #e0e8f0;
+            line-height: 1.5;
+            margin-bottom: 8px;
+            transition: color 0.3s;
+        }
+
+        .blog-card:hover .card-body h3 {
+            color: #ffffff;
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .tag {
+            font-size: 0.65rem;
+            font-weight: 500;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: #1a3050;
+            color: #6b9fd4;
+            font-family: 'JetBrains Mono', monospace;
+            border: 1px solid #2a4a6a;
+        }
+
+        .card-arrow {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #1a3050;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+
+        .blog-card:hover .card-arrow {
+            background: #FF9900;
+        }
+
+        .card-arrow svg {
+            width: 14px;
+            height: 14px;
+            fill: none;
+            stroke: #5a7a9a;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: stroke 0.3s, transform 0.3s;
+        }
+
+        .blog-card:hover .card-arrow svg {
+            stroke: #0b1a2f;
+            transform: translateX(2px);
+        }
+
+        /* Terminal decoration */
+        .terminal-footer {
+            position: relative;
+            z-index: 1;
+            max-width: 500px;
+            margin: 0 auto 60px;
+            background: #0d1f36;
+            border: 1px solid #1e3a5f;
+            border-radius: 10px;
+            padding: 16px 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: #5a7a9a;
+        }
+
+        .terminal-footer .prompt {
+            color: #FF9900;
+        }
+
+        .terminal-footer .cmd {
+            color: #8899aa;
+        }
+
+        .terminal-footer .cursor {
+            display: inline-block;
+            width: 7px;
+            height: 14px;
+            background: #FF9900;
+            margin-left: 4px;
+            animation: blink-cursor 1s step-end infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink-cursor {
+            50% { opacity: 0; }
+        }
+
+        /* Mobile */
+        @media (max-width: 600px) {
+            .blog-card {
+                grid-template-columns: 1fr;
+                gap: 12px;
+                padding: 22px;
+            }
+
+            .card-number {
+                font-size: 1.2rem;
+                text-align: left;
+            }
+
+            .card-arrow {
+                display: none;
+            }
+
+            .blog-stats {
+                gap: 20px;
+            }
+
+            .stat-num {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated data streams -->
+    <div class="bg-streams" id="bgStreams"></div>
+
+    <header class="header">
+        <div>
+            <a href="index.html" class="back-link">
+                <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back to Card
+            </a>
+        </div>
+        <div class="header-badge">
+            <span class="pulse"></span>
+            AWS BIG DATA BLOG — OFFICIAL CONTRIBUTOR
+        </div>
+        <h1>Building the Future of<br><span>Data & AI at Scale</span></h1>
+        <p>Published on the official AWS Big Data Blog — real-world architectures for streaming, ETL, and modern data platforms.</p>
+        <div class="blog-stats">
+            <div class="stat">
+                <div class="stat-num">7</div>
+                <div class="stat-label">Published</div>
+            </div>
+            <div class="stat">
+                <div class="stat-num">5+</div>
+                <div class="stat-label">AWS Services</div>
+            </div>
+            <div class="stat">
+                <div class="stat-num">∞</div>
+                <div class="stat-label">Impact</div>
+            </div>
+        </div>
+    </header>
+
+    <section class="blog-grid">
+        <a href="https://aws.amazon.com/blogs/big-data/orchestrate-end-to-end-scalable-etl-pipeline-with-amazon-sagemaker-workflows/" target="_blank" class="blog-card">
+            <span class="card-number">01</span>
+            <div class="card-body">
+                <h3>Orchestrate end-to-end scalable ETL pipeline with Amazon SageMaker workflows</h3>
+                <div class="card-tags">
+                    <span class="tag">SageMaker</span>
+                    <span class="tag">ETL</span>
+                    <span class="tag">Pipelines</span>
+                </div>
+            </div>
+            <div class="card-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </a>
+
+        <a href="https://aws.amazon.com/blogs/big-data/unlock-real-time-data-insights-with-schema-evolution-using-amazon-msk-serverless-iceberg-and-aws-glue-streaming/" target="_blank" class="blog-card">
+            <span class="card-number">02</span>
+            <div class="card-body">
+                <h3>Unlock real-time data insights with schema evolution using Amazon MSK Serverless, Iceberg, and AWS Glue streaming</h3>
+                <div class="card-tags">
+                    <span class="tag">MSK Serverless</span>
+                    <span class="tag">Iceberg</span>
+                    <span class="tag">Glue Streaming</span>
+                    <span class="tag">Schema Evolution</span>
+                </div>
+            </div>
+            <div class="card-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </a>
+
+        <a href="https://aws.amazon.com/blogs/big-data/visualize-data-lineage-using-amazon-sagemaker-catalog-for-amazon-emr-aws-glue-and-amazon-redshift/" target="_blank" class="blog-card">
+            <span class="card-number">03</span>
+            <div class="card-body">
+                <h3>Visualize data lineage using Amazon SageMaker Catalog for Amazon EMR, AWS Glue, and Amazon Redshift</h3>
+                <div class="card-tags">
+                    <span class="tag">Data Lineage</span>
+                    <span class="tag">SageMaker Catalog</span>
+                    <span class="tag">EMR</span>
+                    <span class="tag">Redshift</span>
+                </div>
+            </div>
+            <div class="card-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </a>
+
+        <a href="https://aws.amazon.com/blogs/big-data/build-a-secure-serverless-streaming-pipeline-with-amazon-msk-serverless-amazon-emr-serverless-and-iam/" target="_blank" class="blog-card">
+            <span class="card-number">04</span>
+            <div class="card-body">
+                <h3>Build a secure serverless streaming pipeline with Amazon MSK Serverless, Amazon EMR Serverless and IAM</h3>
+                <div class="card-tags">
+                    <span class="tag">MSK Serverless</span>
+                    <span class="tag">EMR Serverless</span>
+                    <span class="tag">IAM</span>
+                    <span class="tag">Security</span>
+                </div>
+            </div>
+            <div class="card-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </a>
+
+        <a href="https://aws.amazon.com/blogs/big-data/migrate-delta-tables-from-azure-data-lake-storage-to-amazon-s3-using-aws-glue/" target="_blank" class="blog-card">
+            <span class="card-number">05</span>
+            <div class="card-body">
+                <h3>Migrate Delta tables from Azure Data Lake Storage to Amazon S3 using AWS Glue</h3>
+                <div class="card-tags">
+                    <span class="tag">Delta Lake</span>
+                    <span class="tag">Migration</span>
+                    <span class="tag">Azure → AWS</span>
+                    <span class="tag">Glue</span>
+                </div>
+            </div>
+            <div class="card-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </a>
+
+        <a href="https://aws.amazon.com/blogs/big-data/synchronize-data-lakes-with-cdc-based-upsert-using-open-table-format-aws-glue-and-amazon-msk" target="_blank" class="blog-card">
+            <span class="card-number">06</span>
+            <div class="card-body">
+                <h3>Synchronize data lakes with CDC-based upsert using open table format, AWS Glue, and Amazon MSK</h3>
+                <div class="card-tags">
+                    <span class="tag">CDC</span>
+                    <span class="tag">Open Table Format</span>
+                    <span class="tag">Glue</span>
+                    <span class="tag">MSK</span>
+                </div>
+            </div>
+            <div class="card-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </a>
+
+        <a href="https://aws.amazon.com/blogs/big-data/securely-process-near-real-time-data-from-amazon-msk-serverless-using-an-aws-glue-streaming-etl-job-with-iam-authentication/" target="_blank" class="blog-card">
+            <span class="card-number">07</span>
+            <div class="card-body">
+                <h3>Securely process near real-time data from Amazon MSK Serverless using AWS Glue Streaming ETL with IAM authentication</h3>
+                <div class="card-tags">
+                    <span class="tag">Real-time</span>
+                    <span class="tag">MSK Serverless</span>
+                    <span class="tag">Glue Streaming</span>
+                    <span class="tag">IAM Auth</span>
+                </div>
+            </div>
+            <div class="card-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </a>
+    </section>
+
+    <div class="terminal-footer">
+        <span class="prompt">nitin@aws</span>:<span class="cmd">~/blogs $ echo "More coming soon..."</span><span class="cursor"></span>
+    </div>
+
+    <script>
+        // Generate data stream lines
+        const streams = document.getElementById('bgStreams');
+        const streamCount = 20;
+        for (let i = 0; i < streamCount; i++) {
+            const line = document.createElement('div');
+            line.className = 'stream-line';
+            line.style.left = Math.random() * 100 + '%';
+            line.style.animationDuration = (3 + Math.random() * 5) + 's';
+            line.style.animationDelay = Math.random() * 5 + 's';
+            line.style.height = (40 + Math.random() * 80) + 'px';
+            streams.appendChild(line);
+        }
+    </script>
+</body>
+</html>

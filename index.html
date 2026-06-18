@@ -113,31 +113,113 @@
         }
 
         .card-back .qr-label {
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: #8899aa;
-            margin-bottom: 24px;
-            letter-spacing: 0.06em;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #FF9900;
+            margin-bottom: 16px;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
+            font-family: 'Courier New', monospace;
+        }
+
+        .card-back .terminal-box {
+            background: #0d1a2a;
+            border: 1px solid #1e3a5f;
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 300px;
+            text-align: left;
+        }
+
+        .card-back .terminal-dots {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .card-back .terminal-dots span {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+        }
+
+        .card-back .terminal-dots span:nth-child(1) { background: #ff5f57; }
+        .card-back .terminal-dots span:nth-child(2) { background: #ffbd2e; }
+        .card-back .terminal-dots span:nth-child(3) { background: #28c840; }
+
+        .card-back .terminal-text {
+            font-family: 'Courier New', monospace;
+            font-size: 0.65rem;
+            line-height: 1.8;
+            color: #5a7a9a;
+        }
+
+        .card-back .terminal-text .prompt {
+            color: #4ecdc4;
+        }
+
+        .card-back .terminal-text .cmd {
+            color: #8899aa;
+        }
+
+        .card-back .terminal-text .output {
+            color: #FF9900;
+        }
+
+        .card-back .terminal-text .cursor {
+            display: inline-block;
+            width: 6px;
+            height: 11px;
+            background: #FF9900;
+            margin-left: 3px;
+            animation: blink-cursor 1s step-end infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink-cursor {
+            50% { opacity: 0; }
         }
 
         .card-back .qr-wrapper {
             background: #ffffff;
-            border-radius: 14px;
-            padding: 22px;
+            border-radius: 12px;
+            padding: 16px;
             box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+            margin-bottom: 16px;
         }
 
         .card-back .qr-wrapper img {
-            width: 200px;
-            height: 200px;
+            width: 160px;
+            height: 160px;
             display: block;
         }
 
         .card-back .qr-hint {
-            margin-top: 22px;
-            font-size: 0.76rem;
+            font-size: 0.72rem;
             color: #5a6d7f;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .card-back .qr-hint svg {
+            width: 14px;
+            height: 14px;
+            fill: none;
+            stroke: #5a6d7f;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .card-back .linkedin-url {
+            font-family: 'Courier New', monospace;
+            font-size: 0.62rem;
+            color: #4ecdc4;
+            margin-top: 6px;
+            opacity: 0.7;
         }
 
         /* Flip button */
@@ -190,7 +272,13 @@
             border-radius: 50%;
             padding: 3px;
             background: linear-gradient(135deg, #FF9900, #ffb84d);
-            box-shadow: 0 6px 20px rgba(255, 153, 0, 0.25);
+            position: relative;
+            animation: pulse-glow-photo 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow-photo {
+            0%, 100% { box-shadow: 0 0 15px rgba(255, 153, 0, 0.2); }
+            50% { box-shadow: 0 0 30px rgba(255, 153, 0, 0.4), 0 0 60px rgba(255, 153, 0, 0.1); }
         }
 
         .photo-wrapper img {
@@ -255,30 +343,99 @@
             font-size: 0.85rem;
             line-height: 1.7;
             color: #6b7f92;
-            margin-bottom: 28px;
+            margin-bottom: 16px;
             max-width: 320px;
             margin-left: auto;
             margin-right: auto;
+        }
+
+        .intro .highlight {
+            color: #FF9900;
+            font-weight: 600;
+        }
+
+        .status-bar {
+            background: #0d1a2a;
+            border: 1px solid #1e3a5f;
+            border-radius: 8px;
+            padding: 10px 14px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.7rem;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .status-prompt {
+            color: #4ecdc4;
+            font-weight: 700;
+        }
+
+        .status-text {
+            color: #8899aa;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .status-cursor {
+            display: inline-block;
+            width: 6px;
+            height: 12px;
+            background: #FF9900;
+            animation: blink-status 1s step-end infinite;
+            flex-shrink: 0;
+        }
+
+        @keyframes blink-status {
+            50% { opacity: 0; }
         }
 
         .social-links {
             display: flex;
             gap: 12px;
             justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        .blog-link-row {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        /* Unified button sizing */
+        .linkedin-btn,
+        .github-btn,
+        .blog-btn,
+        .articles-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 0;
+            width: 140px;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .linkedin-btn svg,
+        .github-btn svg,
+        .blog-btn svg,
+        .articles-btn svg {
+            width: 16px;
+            height: 16px;
         }
 
         .linkedin-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 22px;
             background: #0077b5;
             color: #ffffff;
-            text-decoration: none;
-            border-radius: 10px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
             box-shadow: 0 4px 14px rgba(0, 119, 181, 0.3);
         }
 
@@ -288,24 +445,11 @@
             background: #0088cc;
         }
 
-        .linkedin-btn svg {
-            width: 18px;
-            height: 18px;
-            fill: currentColor;
-        }
+        .linkedin-btn svg { fill: currentColor; }
 
         .github-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 22px;
             background: #24292e;
             color: #ffffff;
-            text-decoration: none;
-            border-radius: 10px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
             box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
         }
 
@@ -315,10 +459,30 @@
             background: #333a40;
         }
 
-        .github-btn svg {
-            width: 18px;
-            height: 18px;
-            fill: currentColor;
+        .github-btn svg { fill: currentColor; }
+
+        .blog-btn {
+            background: #FF9900;
+            color: #0b1a2f;
+            box-shadow: 0 4px 14px rgba(255, 153, 0, 0.3);
+        }
+
+        .blog-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 153, 0, 0.4);
+            background: #ffb84d;
+        }
+
+        .articles-btn {
+            background: #4ecdc4;
+            color: #0b1a2f;
+            box-shadow: 0 4px 14px rgba(78, 205, 196, 0.3);
+        }
+
+        .articles-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(78, 205, 196, 0.4);
+            background: #6dd8d1;
         }
 
         /* Mobile */
@@ -366,8 +530,13 @@
                     </span>
                     <div class="divider"></div>
                     <p class="intro">
-                        Helping enterprises build &amp; scale Data AI ecosystem | Streaming &amp; Data AI Specialist
+                        Helping enterprises build &amp; scale <span class="highlight">Data AI</span> ecosystem | <span class="highlight">Streaming</span> &amp; <span class="highlight">Data AI Specialist</span>
                     </p>
+                    <div class="status-bar">
+                        <span class="status-prompt">&gt;</span>
+                        <span class="status-text" id="statusText"></span>
+                        <span class="status-cursor"></span>
+                    </div>
                     <div class="social-links">
                         <a href="https://www.linkedin.com/in/nitinkr91/" class="linkedin-btn" target="_blank" rel="noopener noreferrer" aria-label="Connect on LinkedIn">
                             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -382,16 +551,49 @@
                             GitHub
                         </a>
                     </div>
+                    <div class="blog-link-row">
+                        <a href="blogs.html" class="blog-btn" aria-label="Read Blog">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M8 7h8M8 11h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            Blogs
+                        </a>
+                        <a href="articles.html" class="articles-btn" aria-label="Read Articles">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <polyline points="14 2 14 8 20 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            Articles
+                        </a>
+                    </div>
                 </div>
             </div>
 
             <!-- BACK -->
             <div class="card-back" aria-label="QR Code to connect">
-                <p class="qr-label">Scan to Connect</p>
-                <div class="qr-wrapper">
-                    <img src="QRCode.png" alt="QR Code - Scan to connect with Nitin Kumar" />
+                <div class="terminal-box">
+                    <div class="terminal-dots">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <div class="terminal-text">
+                        <span class="prompt">nitin@aws</span>:<span class="cmd">~ $ connect --linkedin</span><br>
+                        <span class="output">→ Scan QR to connect instantly</span><br>
+                        <span class="prompt">nitin@aws</span>:<span class="cmd">~ $ </span><span class="cursor"></span>
+                    </div>
                 </div>
-                <p class="qr-hint">Point your camera to scan</p>
+                <p class="qr-label">// Scan to Connect</p>
+                <div class="qr-wrapper">
+                    <img src="QRCode.png" alt="QR Code - LinkedIn Profile" />
+                </div>
+                <p class="qr-hint">
+                    <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                    LinkedIn Profile
+                </p>
+                <p class="linkedin-url">linkedin.com/in/nitinkr91</p>
             </div>
         </div>
     </div>
@@ -406,6 +608,46 @@
     </button>
 
     <script>
+        // Rotating status bar typing animation
+        const phrases = [
+            'orchestrating ETL pipelines at scale...',
+            'building real-time streaming architectures...',
+            'designing data AI ecosystems...',
+            'migrating workloads to the cloud...',
+            'enabling serverless data platforms...'
+        ];
+        const statusEl = document.getElementById('statusText');
+        let phraseIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+
+        function typeStatus() {
+            const current = phrases[phraseIndex];
+
+            if (!isDeleting) {
+                statusEl.textContent = current.substring(0, charIndex + 1);
+                charIndex++;
+                if (charIndex === current.length) {
+                    isDeleting = true;
+                    setTimeout(typeStatus, 2000);
+                    return;
+                }
+                setTimeout(typeStatus, 50);
+            } else {
+                statusEl.textContent = current.substring(0, charIndex - 1);
+                charIndex--;
+                if (charIndex === 0) {
+                    isDeleting = false;
+                    phraseIndex = (phraseIndex + 1) % phrases.length;
+                    setTimeout(typeStatus, 400);
+                    return;
+                }
+                setTimeout(typeStatus, 30);
+            }
+        }
+
+        typeStatus();
+
         // AI Neural Network Animation
         const canvas = document.getElementById('ai-bg');
         const ctx = canvas.getContext('2d');
@@ -487,8 +729,13 @@
         const container = document.getElementById('cardContainer');
         const btn = document.getElementById('flipBtn');
 
+        // Always show front side on page load/back navigation
+        window.addEventListener('pageshow', () => {
+            container.classList.remove('flipped');
+        });
+
         function flip(e) {
-            if (e.target.closest('.linkedin-btn') || e.target.closest('.github-btn')) return;
+            if (e.target.closest('.linkedin-btn') || e.target.closest('.github-btn') || e.target.closest('.blog-btn') || e.target.closest('.articles-btn')) return;
             container.classList.toggle('flipped');
         }
 

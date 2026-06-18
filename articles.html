@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Articles | Nitin Kumar - AWS Community</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #0b1a2f;
+            font-family: 'Inter', sans-serif;
+            color: #c8d6e5;
+            overflow-x: hidden;
+        }
+
+        /* Floating circuit board pattern */
+        .bg-circuits {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .circuit-node {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #FF9900;
+            border-radius: 50%;
+            opacity: 0;
+            animation: node-pulse 4s ease-in-out infinite;
+        }
+
+        .circuit-line {
+            position: absolute;
+            background: linear-gradient(90deg, transparent, #FF9900, transparent);
+            height: 1px;
+            opacity: 0.06;
+            animation: line-travel 6s linear infinite;
+        }
+
+        @keyframes node-pulse {
+            0%, 100% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 0.4; transform: scale(1.2); }
+        }
+
+        @keyframes line-travel {
+            0% { transform: translateX(-100%); opacity: 0; }
+            50% { opacity: 0.1; }
+            100% { transform: translateX(100vw); opacity: 0; }
+        }
+
+        /* Header */
+        .header {
+            position: relative;
+            z-index: 1;
+            padding: 60px 20px 40px;
+            text-align: center;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #5a7a9a;
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 500;
+            margin-bottom: 24px;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: #FF9900;
+        }
+
+        .back-link svg {
+            width: 16px;
+            height: 16px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #162742;
+            border: 1px solid #2a4a6a;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #4ecdc4;
+            margin-bottom: 20px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .header-badge .pulse {
+            width: 8px;
+            height: 8px;
+            background: #4ecdc4;
+            border-radius: 50%;
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(78, 205, 196, 0.4); }
+            50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(78, 205, 196, 0); }
+        }
+
+        .header h1 {
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 12px;
+            letter-spacing: -0.03em;
+            line-height: 1.2;
+        }
+
+        .header h1 span {
+            background: linear-gradient(135deg, #4ecdc4, #44b8b0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 1rem;
+            color: #6b7f92;
+            max-width: 540px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .article-stats {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-top: 28px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-num {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #4ecdc4;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: #5a6d7f;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-top: 2px;
+        }
+
+        /* Category separator */
+        .category-label {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 30px auto 16px;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .category-label span {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #5a7a9a;
+            white-space: nowrap;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .category-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #1e3a5f;
+        }
+
+        /* Article grid */
+        .article-grid {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* Article card */
+        .article-card {
+            background: #162742;
+            border: 1px solid #1e3a5f;
+            border-radius: 14px;
+            padding: 22px 24px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .article-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(180deg, #4ecdc4, #44b8b0);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .article-card:hover {
+            transform: translateX(4px);
+            border-color: #4ecdc4;
+            box-shadow: 0 6px 24px rgba(78, 205, 196, 0.06);
+        }
+
+        .article-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: #1a3050;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+            flex-shrink: 0;
+        }
+
+        .article-card:hover .card-icon {
+            background: #4ecdc4;
+        }
+
+        .card-icon svg {
+            width: 18px;
+            height: 18px;
+            fill: none;
+            stroke: #4ecdc4;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: stroke 0.3s;
+        }
+
+        .article-card:hover .card-icon svg {
+            stroke: #0b1a2f;
+        }
+
+        .card-body h3 {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #e0e8f0;
+            line-height: 1.5;
+            margin-bottom: 6px;
+            transition: color 0.3s;
+        }
+
+        .article-card:hover .card-body h3 {
+            color: #ffffff;
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .tag {
+            font-size: 0.62rem;
+            font-weight: 500;
+            padding: 2px 7px;
+            border-radius: 4px;
+            background: #1a3050;
+            color: #4ecdc4;
+            font-family: 'JetBrains Mono', monospace;
+            border: 1px solid #2a4a6a;
+        }
+
+        .card-arrow {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #1a3050;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+
+        .article-card:hover .card-arrow {
+            background: #4ecdc4;
+        }
+
+        .card-arrow svg {
+            width: 12px;
+            height: 12px;
+            fill: none;
+            stroke: #5a7a9a;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: stroke 0.3s, transform 0.3s;
+        }
+
+        .article-card:hover .card-arrow svg {
+            stroke: #0b1a2f;
+            transform: translateX(2px);
+        }
+
+        /* Terminal decoration */
+        .terminal-footer {
+            position: relative;
+            z-index: 1;
+            max-width: 500px;
+            margin: 40px auto 60px;
+            background: #0d1f36;
+            border: 1px solid #1e3a5f;
+            border-radius: 10px;
+            padding: 16px 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: #5a7a9a;
+        }
+
+        .terminal-footer .prompt {
+            color: #4ecdc4;
+        }
+
+        .terminal-footer .cmd {
+            color: #8899aa;
+        }
+
+        .terminal-footer .cursor {
+            display: inline-block;
+            width: 7px;
+            height: 14px;
+            background: #4ecdc4;
+            margin-left: 4px;
+            animation: blink-cursor 1s step-end infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink-cursor {
+            50% { opacity: 0; }
+        }
+
+        /* Mobile */
+        @media (max-width: 600px) {
+            .article-card {
+                grid-template-columns: 1fr;
+                gap: 10px;
+                padding: 18px;
+            }
+
+            .card-icon {
+                width: 32px;
+                height: 32px;
+            }
+
+            .card-arrow {
+                display: none;
+            }
+
+            .article-stats {
+                gap: 20px;
+            }
+
+            .stat-num {
+                font-size: 1.4rem;
+            }
+
+            .category-label {
+                margin-top: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated circuit background -->
+    <div class="bg-circuits" id="bgCircuits"></div>
+
+    <header class="header">
+        <div>
+            <a href="index.html" class="back-link">
+                <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back to Card
+            </a>
+        </div>
+        <div class="header-badge">
+            <span class="pulse"></span>
+            AWS COMMUNITY — KNOWLEDGE CONTRIBUTOR
+        </div>
+        <h1>Solving Real Problems,<br><span>One Article at a Time</span></h1>
+        <p>Sharing valuable insights, best practices, and battle-tested solutions to help the broader AWS community succeed.</p>
+        <div class="article-stats">
+            <div class="stat">
+                <div class="stat-num">10</div>
+                <div class="stat-label">Articles</div>
+            </div>
+            <div class="stat">
+                <div class="stat-num">re:Post</div>
+                <div class="stat-label">Platform</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="category-label"><span>// Deep-Dive Articles</span></div>
+
+    <section class="article-grid">
+        <a href="https://repost.aws/articles/AReh-cLXF8QM68mJ_-MZkkkQ/cloudwatch-dashboards-for-aws-glue-job-monitoring" target="_blank" class="article-card">
+            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 16l4-4 4 4 6-6"/></svg></div>
+            <div class="card-body">
+                <h3>CloudWatch dashboards for AWS Glue Job monitoring</h3>
+                <div class="card-tags">
+                    <span class="tag">CloudWatch</span>
+                    <span class="tag">Glue</span>
+                    <span class="tag">Monitoring</span>
+                </div>
+            </div>
+            <div class="card-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </a>
+
+        <a href="https://repost.aws/articles/AR0rXT4COgQ3q2XQZzHrCz7g/migrating-snowflake-authentication-from-password-to-key-pair-in-aws-glue" target="_blank" class="article-card">
+            <div class="card-icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+            <div class="card-body">
+                <h3>Migrating Snowflake Authentication from Password to Key Pair in AWS Glue</h3>
+                <div class="card-tags">
+                    <span class="tag">Snowflake</span>
+                    <span class="tag">Key Pair</span>
+                    <span class="tag">Glue</span>
+                    <span class="tag">Auth</span>
+                </div>
+            </div>
+            <div class="card-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </a>
+
+        <a href="https://repost.aws/articles/ARDXZ96YxkSvOMTiGpX-yobQ/implementing-ssl-connections-to-rds-oracle-db-in-aws-glue-a-guide-for-dynamicframe-and-dataframe" target="_blank" class="article-card">
+            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <div class="card-body">
+                <h3>Implementing SSL Connections to RDS Oracle DB in AWS Glue: A Guide for DynamicFrame and DataFrame</h3>
+                <div class="card-tags">
+                    <span class="tag">SSL</span>
+                    <span class="tag">RDS Oracle</span>
+                    <span class="tag">Glue</span>
+                    <span class="tag">DynamicFrame</span>
+                </div>
+            </div>
+            <div class="card-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </a>
+
+        <a href="https://repost.aws/articles/ARTT49mVccTzuA9bQ2UUQq2g/aws-glue-job-networking-managing-multiple-connections" target="_blank" class="article-card">
+            <div class="card-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="3"/><circle cx="5" cy="19" r="3"/><circle cx="19" cy="19" r="3"/><path d="M12 8v4l-5 5M12 12l5 5"/></svg></div>
+            <div class="card-body">
+                <h3>AWS Glue Job Networking: Managing Multiple Connections</h3>
+                <div class="card-tags">
+                    <span class="tag">Networking</span>
+                    <span class="tag">Glue</span>
+                    <span class="tag">VPC</span>
+                    <span class="tag">Connections</span>
+                </div>
+            </div>
+            <div class="card-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </a>
+
+        <a href="https://repost.aws/articles/ARVX6gyED3Rj2hIIdz_aGSOQ/create-kafka-client-keystore-certificate-for-connecting-aws-msk-with-mtls-authentication-from-aws-glue" target="_blank" class="article-card">
+            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.78 7.78 5.5 5.5 0 0 1 7.78-7.78zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg></div>
+            <div class="card-body">
+                <h3>Create Kafka Client Keystore certificate for connecting AWS MSK with mTLS Authentication from AWS Glue</h3>
+                <div class="card-tags">
+                    <span class="tag">MSK</span>
+                    <span class="tag">mTLS</span>
+                    <span class="tag">Keystore</span>
+                    <span class="tag">Glue</span>
+                </div>
+            </div>
+            <div class="card-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </a>
+    </section>
+
+    <div class="category-label"><span>// Knowledge Center</span></div>
+
+    <section class="article-grid">
+        <a href="https://repost.aws/knowledge-center/glue-troubleshoot-cross-account-msk" target="_blank" class="article-card">
+            <div class="card-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r="0.5"/></svg></div>
+            <div class="card-body">
+                <h3>How do I troubleshoot a cross-account AWS Glue job for an Amazon MSK cluster?</h3>
+                <div class="card-tags">
+                    <span class="tag">Cross-Account</span>
+                    <span class="tag">Glue</span>
+                    <span class="tag">MSK</span>
+                </div>
+            </div>
+            <div class="card-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </a>
+
+        <a href="https://repost.aws/knowledge-center/glue-tag-interactive-session" target="_blank" class="article-card">
+            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1.5"/></svg></div>
+            <div class="card-body">
+                <h3>How do I tag an AWS Glue interactive session?</h3>
+                <div class="card-tags">
+                    <span class="tag">Tags</span>
+                    <span class="tag">Interactive Session</span>
+                    <span class="tag">Glue</span>
+                </div>
+            </div>
+            <div class="card-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </a>
+
+        <a href="https://repost.aws/knowledge-center/glue-data-catalog-cross-account-access" target="_blank" class="article-card">
+            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+            <div class="card-body">
+                <h3>How can I provide cross-account access to resources in the AWS Glue Data Catalog?</h3>
+                <div class="card-tags">
+                    <span class="tag">Cross-Account</span>
+                    <span class="tag">Data Catalog</span>
+                    <span class="tag">IAM</span>
+                </div>
+            </div>
+            <div class="card-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </a>
+
+        <a href="https://repost.aws/knowledge-center/glue-error-redshift-temporary-directory" target="_blank" class="article-card">
+            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg></div>
+            <div class="card-body">
+                <h3>Why does my AWS Glue job fail with "Temporary directory not specified" when inserting data into Amazon Redshift?</h3>
+                <div class="card-tags">
+                    <span class="tag">Error Fix</span>
+                    <span class="tag">Redshift</span>
+                    <span class="tag">Glue</span>
+                </div>
+            </div>
+            <div class="card-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </a>
+
+        <a href="https://repost.aws/knowledge-center/glue-iam-permissions-errors" target="_blank" class="article-card">
+            <div class="card-icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/><circle cx="12" cy="16" r="1"/></svg></div>
+            <div class="card-body">
+                <h3>How do I troubleshoot "User/IAM role X is not authorized to perform Y on resource Z" in AWS Glue?</h3>
+                <div class="card-tags">
+                    <span class="tag">IAM</span>
+                    <span class="tag">Permissions</span>
+                    <span class="tag">Troubleshooting</span>
+                </div>
+            </div>
+            <div class="card-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </a>
+    </section>
+
+    <div class="terminal-footer">
+        <span class="prompt">nitin@aws</span>:<span class="cmd">~/articles $ cat wisdom.log | grep "community"</span><span class="cursor"></span>
+    </div>
+
+    <script>
+        // Generate circuit nodes and lines
+        const circuits = document.getElementById('bgCircuits');
+        for (let i = 0; i < 30; i++) {
+            const node = document.createElement('div');
+            node.className = 'circuit-node';
+            node.style.left = Math.random() * 100 + '%';
+            node.style.top = Math.random() * 100 + '%';
+            node.style.animationDelay = Math.random() * 4 + 's';
+            node.style.animationDuration = (3 + Math.random() * 3) + 's';
+            circuits.appendChild(node);
+        }
+        for (let i = 0; i < 12; i++) {
+            const line = document.createElement('div');
+            line.className = 'circuit-line';
+            line.style.top = Math.random() * 100 + '%';
+            line.style.width = (100 + Math.random() * 200) + 'px';
+            line.style.animationDelay = Math.random() * 6 + 's';
+            line.style.animationDuration = (4 + Math.random() * 4) + 's';
+            circuits.appendChild(line);
+        }
+    </script>
+</body>
+</html>
